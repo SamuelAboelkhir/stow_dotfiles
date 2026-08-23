@@ -1,0 +1,88 @@
+# FZF history reverse search (with fallback)
+if command -v fzf >/dev/null 2>&1; then
+  __fzf_history_search() {
+    BUFFER=$(zsh-history-timestamp | \
+      fzf --tac +s --reverse | \
+      sed 's/^[^→]*→ //')
+    CURSOR=${#BUFFER}
+    zle redisplay
+  }
+  zle -N __fzf_history_search
+  bindkey '^R' __fzf_history_search
+fi
+
+# Cool cd function (with fallback if exa/fzf missing)
+coolCD() {
+  if command -v eza >/dev/null 2>&1; then
+    # Ubuntu 24.04 uses 'eza' instead of 'exa'
+    dir=$(eza --icons 2>/dev/null | sed 's/^[^ ]* //g' | fzf \
+      --preview='[[ -d {} ]] && eza --icons -lh {} 2>/dev/null || bat --style=plain --color=always {} 2>/dev/null')
+  elif command -v exa >/dev/null 2>&1; then
+    dir=$(exa --icons 2>/dev/null | sed 's/^[^ ]* //g' | fzf \
+      --preview='[[ -d {} ]] && exa --icons -lh {} 2>/dev/null || batcat --style=plain --color=always {} 2>/dev/null')
+  else
+    dir=$(ls | fzf --preview='[[ -d {} ]] && ls -la {} || cat {}')
+  fi
+  [ -n "$dir" ] && cd "$dir"
+}
+
+
+zsh-history-timestamp() {
+  cat ~/.zsh_history | sed -n 's/^: \([0-9]*\):0;/\1 /p' | \
+  while read -r epoch cmd; do
+    printf "%s → %s\n" "$(date -d @$epoch '+%Y-%m-%d %H:%M:%S')" "$cmd"
+  done
+}
+
+
+# cd hook to load .nvmrc version automatically
+cdnvm() {
+  builtin cd "$@" || return $?
+  
+  # Only run if nvm is available
+  if ! command -v nvm >/dev/null 2>&1; then
+    return 0
+  fi
+  
+  nvm_path="$(nvm_find_up .nvmrc | tr -d '\n')"
+  if [[ -z "$nvm_path" ]]; then
+    default_version=$(nvm version default 2>/dev/null)
+    if [[ "$default_version" == "N/A" ]] || [[ -z "$default_version" ]]; then
+      nvm alias default node >/dev/null 2>&1
+      default_version=$(nvm version default 2>/dev/null)
+    fi
+    [[ "$(nvm current)" != "$default_version" ]] && nvm use default >/dev/null 2>&1
+  elif [[ -s "${nvm_path}/.nvmrc" && -r "${nvm_path}/.nvmrc" ]]; then
+    nvm_version=$(<"${nvm_path}/.nvmrc")
+    resolved_version=$(nvm ls --no-colors "$nvm_version" 2>/dev/null | tail -1 | sed 's/->.*//;s/[^a-zA-Z0-9\.\-]//g')
+    if [[ "$resolved_version" == "N/A" ]] || [[ -z "$resolved_version" ]]; then
+      nvm install "$nvm_version" >/dev/null 2>&1
+    elif [[ "$(nvm current)" != "$resolved_version" ]]; then
+      nvm use "$nvm_version" >/dev/null 2>&1
+    fi
+  fi
+}
+alias cd='cdnvm'
+cdnvm "$PWD" 2>/dev/null || true
+
+#compdef gitlab-ci-local
+###-begin-gitlab-ci-local-completions-###
+#
+# yargs command completion script
+#
+# Installation: /usr/bin/gitlab-ci-local completion >> ~/.zshrc
+#    or /usr/bin/gitlab-ci-local completion >> ~/.zprofile on OSX.
+#
+_gitlab-ci-local_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" /usr/bin/gitlab-ci-local --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _gitlab-ci-local_yargs_completions gitlab-ci-local
+###-end-gitlab-ci-local-completions-###
+
+

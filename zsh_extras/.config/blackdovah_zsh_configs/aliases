@@ -1,0 +1,16 @@
+alias doom='~/bin/terminal-doom/zig-out/bin/terminal-doom'
+alias impala='/home/blackdovah/.cargo/bin/impala'
+alias help=run-help
+alias history="history 1"
+
+# Aliases (with Ubuntu 24.04 compatibility)
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(fc -ln -1)"'
+
+# Safety aliases
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias mkdir='mkdir -p'
