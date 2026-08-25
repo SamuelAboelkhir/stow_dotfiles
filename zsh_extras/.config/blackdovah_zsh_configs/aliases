@@ -1,4 +1,4 @@
-alias doom='~/bin/terminal-doom/zig-out/bin/terminal-doom'
+alias doom='~/.config/emacs/bin/doom'
 alias impala='/home/blackdovah/.cargo/bin/impala'
 alias help=run-help
 alias history="history 1"
