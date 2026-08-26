@@ -29,20 +29,58 @@
 ;; refresh your font settings. If Emacs still can't find your font, it likely
 ;; wasn't installed correctly. Font issues are rarely Doom issues!
 
+;; Integrate omarchy themes
+(load! "omarchy-themes")
+
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-1337)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
+(setq doom-font (font-spec :family "JetBrains Mono" :size 10))
 
+(after! eglot
+  (add-to-list
+   'eglot-server-programs
+   `(((js-mode :language-id "javascript")
+      (js-ts-mode :language-id "javascript")
+      (tsx-ts-mode :language-id "typescriptreact")
+      (typescript-ts-mode :language-id "typescript")
+      (typescript-mode :language-id "typescript"))
+     . (,(expand-file-name "~/.local/share/nvim/mason/bin/vtsls")
+        "--stdio"))))
+
+(setq-default eglot-workspace-configuration
+              '((:vtsls
+                 (:enableMoveToFileCodeAction t
+                  :autoUseWorkspaceTsdk t
+                  :experimental
+                  (:maxInlayHintLength 30
+                   :completion
+                   (:enableServerSideFuzzyMatch t)))
+                 :typescript
+                 (:updateImportsOnFileMove
+                  (:enabled "always"))
+                 :suggest
+                 (:completeFunctionCalls t)
+                 :inlayHints
+                 (:enumMemberValues (:enabled t)
+                  :functionLikeReturnTypes (:enabled t)
+                  :parameterNames (:enabled "literals")
+                  :parameterTypes (:enabled t)
+                  :propertyDeclarationTypes (:enabled t)
+                  :variableTypes (:enabled nil))
+                 :javascript
+                 (:suggest
+                  (:completeFunctionCalls t)))))
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `with-eval-after-load' block, otherwise Doom's defaults may override your
 ;; settings. E.g.

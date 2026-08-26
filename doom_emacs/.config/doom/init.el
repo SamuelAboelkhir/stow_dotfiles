@@ -66,7 +66,7 @@
        ;;rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
        (whitespace +guess +trim)  ; a butler for your whitespace
-       ;;word-wrap         ; soft wrapping with language-aware indent
+       word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
        dired             ; making dired pretty [functional]
@@ -81,7 +81,7 @@
        ;;eshell            ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
-       ;; vterm             ; almost the best terminal emulation in Emacs
+       vterm             ; almost the best terminal emulation in Emacs
        ghostel           ; the best terminal emulation in Emacs
 
        :checkers
