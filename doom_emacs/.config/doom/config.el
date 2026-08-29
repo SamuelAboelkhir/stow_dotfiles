@@ -90,6 +90,53 @@
   (unless (string-empty-p auth-sock)
     (setenv "SSH_AUTH_SOCK" auth-sock)))
 
+;; Clutch config for DB2 for i
+(setq clutch-jdbc-agent-java-executable
+      "/home/blackdovah/.local/share/mise/installs/java/liberica-26.0.0+37/bin/java")
+(setq clutch-connection-alist
+      '(("va-ibmi" .(:backend jdbc
+                     :url "jdbc:as400://10.30.1.134;libraries=VAQACDTA;"
+                     :driver-class "com.ibm.as400.access.AS400JDBCDriver"
+                     :user "esky001"
+                     :password "2Sk6J1m2s$"))
+        ;; Config for redis
+        ("va-redis" . (:backend redis
+                       :host "localhost"
+                       :port 6379
+                       :password "yXrX77QPD0jrsVctSiMfvcWxGR2ZpJXe6OYM2LfloIsPbCzR"))
+        ("PUB400" .(:backend jdbc
+                    :url "jdbc:as400://PUB400.COM;libraries=MYLIB;keep alive=true;metadata source=1;"
+                    :driver-class "com.ibm.as400.access.AS400JDBCDriver"
+                    :schema "MYLIB"
+                    :user "BLACKDOVA"
+                    :password "BLACK01288137949!1"))
+        ))
+
+;; tmux-pane config
+(use-package! tmux-pane
+  :config
+  (tmux-pane-mode)
+  (map! :leader
+        (:prefix ("v" . "tmux pane")
+         :desc "Open vpane" :nv "o" #'tmux-pane-open-vertical
+         :desc "Open hpane" :nv "h" #'tmux-pane-open-horizontal
+         :desc "Open hpane" :nv "s" #'tmux-pane-open-horizontal
+         :desc "Open vpane" :nv "v" #'tmux-pane-open-vertical
+         :desc "Close pane" :nv "c" #'tmux-pane-close
+         :desc "Rerun last command" :nv "r" #'tmux-pane-rerun))
+  (map! :leader
+        (:prefix "t"
+         :desc "vpane" :nv "v" #'tmux-pane-toggle-vertical
+         :desc "hpane" :nv "h" #'tmux-pane-toggle-horizontal)))
+
+(defun +dashboard-draw-ascii-banner-fn ()
+  (propertize
+   (with-temp-buffer
+     (insert-file-contents
+      (expand-file-name "banner.txt" doom-user-dir))
+     (buffer-string))
+   'face '+dashboard-banner))
+
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `with-eval-after-load' block, otherwise Doom's defaults may override your
 ;; settings. E.g.

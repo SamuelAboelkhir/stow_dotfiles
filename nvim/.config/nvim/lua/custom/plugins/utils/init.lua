@@ -13,7 +13,7 @@ return {
   require(submodulePath .. 'vim-tmux-nav'),
   require(submodulePath .. 'snacks'),
   -- require(submodulePath .. 'grug-far'),
-  require(submodulePath .. 'present'),
+  -- require(submodulePath .. 'present'),
   -- require(submodulePath .. 'opencode'),
   -- require(submodulePath .. 'claude-code'),
   require(submodulePath .. 'droast'),

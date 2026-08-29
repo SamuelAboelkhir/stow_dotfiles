@@ -85,4 +85,5 @@ _gitlab-ci-local_yargs_completions()
 compdef _gitlab-ci-local_yargs_completions gitlab-ci-local
 ###-end-gitlab-ci-local-completions-###
 
-
+## mise completions
+eval "$(mise completion zsh)"
