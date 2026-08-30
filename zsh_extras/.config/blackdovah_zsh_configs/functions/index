@@ -1,2 +1,7 @@
 source ~/.config/blackdovah_zsh_configs/functions/zoxide
 source ~/.config/blackdovah_zsh_configs/functions/functions
+source ~/.config/blackdovah_zsh_configs/functions/compression
+source ~/.config/blackdovah_zsh_configs/functions/rsyncing
+source ~/.config/blackdovah_zsh_configs/functions/ssh-port-forwarding
+source ~/.config/blackdovah_zsh_configs/functions/ssh-reconnect
+source ~/.config/blackdovah_zsh_configs/functions/tmux

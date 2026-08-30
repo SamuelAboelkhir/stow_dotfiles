@@ -5,19 +5,15 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Amazon Q pre block. Keep at the top of this file.
-[[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh"
+# Omarchy environment
+if [[ -r /usr/share/omarchy/default/bash/env-bootstrap ]]; then
+    source /usr/share/omarchy/default/bash/env-bootstrap
+fi
 
 # Suppress Powerlevel10k instant prompt console output warnings
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 eval "$(mise activate zsh)"
-
-# Gitlab env variables
-export GITLAB_TOKEN="glpat-H0QRNUv9-zF0XO4tfutkHm86MQp1OjFjCA.01.0y1h8lbi7"
-export GITLAB_VIM_URL="https://gitlab.e-sky.ca"
-export GITLAB_INSTANCE_URL="https://gitlab.e-sky.ca"
-export GITLAB_BASE_URL="https://gitlab.e-sky.ca"
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 if [[ -f /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]]; then
@@ -86,43 +82,9 @@ case "$TERM" in
     ;;
 esac
 
-
-# Color support for ls and grep
-if command -v dircolors >/dev/null; then
-  eval "$(dircolors -b)"
-  alias ls='ls --color=auto'
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  alias egrep='egrep --color=auto'
-fi
-
-
-# Use eza if available (Ubuntu 24.04), fallback to exa, then ls
-if command -v eza >/dev/null 2>&1; then
-  alias ls='eza --color=auto --icons'
-  alias exa='eza --icons'
-elif command -v exa >/dev/null 2>&1; then
-  alias ls='exa --color=auto --icons'
-  alias exa='exa --icons'
-else
-  alias ls='ls --color=auto'
-fi
-
-# Process viewer - procs might not be available
-if command -v procs >/dev/null 2>&1; then
-  alias ps='procs'
-fi
-
-# Other aliases
-if command -v lazydocker >/dev/null 2>&1; then
-  alias lzd='lazydocker'
-fi
-
-
 # NVM (with existence check)
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
 
 # PNPM (with existence check)
 if [[ -d "$HOME/.local/share/pnpm" ]]; then
@@ -167,20 +129,8 @@ if [[ -d "$HOME/.pyenv" ]]; then
   eval "$(pyenv virtualenv-init -)" 2>/dev/null
 fi
 
-# Starship (with existence check)
-if command -v starship >/dev/null 2>&1; then
-  eval "$(starship init zsh)"
-fi
-
 # P10k config
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Amazon Q post block. Keep at the bottom of this file.
-[[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.post.zsh"
-export PATH="$HOME/.local/share/omarchy/bin:$PATH"
-eval $(keychain --eval --quiet GH_id_rsa)
-# shellcheck shell=bash
-
 
 # Add to path
 export PATH=/home/$USER/Documents/bib/:$PATH

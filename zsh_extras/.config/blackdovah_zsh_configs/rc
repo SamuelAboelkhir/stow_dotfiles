@@ -1,2 +1,4 @@
 source ~/.config/blackdovah_zsh_configs/functions/index
 source ~/.config/blackdovah_zsh_configs/aliases
+source ~/.config/blackdovah_zsh_configs/completions
+source ~/.config/blackdovah_zsh_configs/envs
