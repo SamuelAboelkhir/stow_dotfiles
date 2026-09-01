@@ -18,7 +18,13 @@
            :repo "LuciusChen/redis.el"))
 (package! tmux-pane)
 (package! restclient)
+(package! websocket)
+(package! simple-httpd)
+(package! f)
 (package! org-bullets)
+(package! org-auto-tangle)
+(unpin! org-roam)
+(package! org-roam-ui)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
