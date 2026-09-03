@@ -58,6 +58,14 @@
 (setq display-line-numbers-type 'relative)
  #+end_src
 
+** Key-bindings
+#+begin_src emacs-lisp
+(after! centaur-tabs
+  (evil-global-set-key 'normal "H" #'centaur-tabs-backward-tab)
+  (evil-global-set-key 'normal "L" #'centaur-tabs-forward-tab)
+  )
+#+end_src
+
 ** Org directory
  If you use `org' and don't want your org files in the default location below,
  change `org-directory'. It must be set before org loads!
@@ -136,6 +144,7 @@
   (unless (string-empty-p auth-sock)
     (setenv "SSH_AUTH_SOCK" auth-sock)))
 #+end_src
+
 ** Clutch config for DB2 for i
 #+begin_src emacs-lisp
 (setq clutch-jdbc-agent-java-executable
@@ -218,7 +227,73 @@
 
 ** Rstudio mode
 #+begin_src emacs-lisp
+;;; R / ESS
+
+(after! ess-r-mode
+
+  ;; RStudio-compatible indentation
+  (setq ess-style 'RStudio)
+
+  ;; Don't ask where to start R
+  (setq ess-ask-for-ess-directory nil)
+
+  ;; Don't restore .RData
+  (setq inferior-R-args "--no-save")
+
+  ;; Normal comment indentation
+  (setq ess-indent-with-fancy-comments nil)
+
+  ;; Don't block Emacs during evaluation
+  (setq ess-eval-visibly 'nowait)
+
+  (defun my/rstudio-layout ()
+    "Build an RStudio-like layout."
+    (interactive)
+
+    (let ((source (current-buffer)))
+
+      ;; Start R
+      (ess-switch-to-ESS t)
+
+      ;; Open the environment
+      (ess-rdired)
+
+      ;; Get the actual ESS buffers
+      (let ((console (ess-get-current-process-buffer))
+            (environment (get-buffer ess-rdired-buffer)))
+
+        ;; Go back to our R source file
+        (pop-to-buffer source)
+        (delete-other-windows)
+
+        ;; Console -> right of source
+        (display-buffer-in-atom-window
+         console
+         `((window . ,(get-buffer-window source))
+           (side . right)
+           (window-width . 0.33)
+           (dedicated . t)))
+
+        ;; Environment -> below console
+        (display-buffer-in-atom-window
+         environment
+         `((window . ,(get-buffer-window console))
+           (side . below)
+           (window-height . 0.35)
+           (dedicated . t))))
+
+
+
+      ;; (display-buffer-in-atom-window
+      ;;  plots
+      ;;  `((window . ,(get-buffer-window source))
+      ;;   (side . below) (window-height . 0.35)
+      ;;   (dedicated . t))))
+      ))
+  (add-hook 'ess-r-mode-hook #'my/rstudio-layout)
+  )
 #+end_src
+
 ** Footer
  Whenever you reconfigure a package, make sure to wrap your config in an
  `with-eval-after-load' block, otherwise Doom's defaults may override your
@@ -250,7 +325,3 @@
 
  You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
  they are implemented.
-
-
-
-

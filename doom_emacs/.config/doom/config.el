@@ -5,6 +5,11 @@
 
 (setq display-line-numbers-type 'relative)
 
+(after! centaur-tabs
+  (evil-global-set-key 'normal "H" #'centaur-tabs-backward-tab)
+  (evil-global-set-key 'normal "L" #'centaur-tabs-forward-tab)
+  )
+
 (setq org-directory "~/org/")
 (setq org-roam-directory "~/org")
 
@@ -129,4 +134,68 @@
   :config
   (setq org-auto-tangle-default t))
 
+;;; R / ESS
 
+(after! ess-r-mode
+
+  ;; RStudio-compatible indentation
+  (setq ess-style 'RStudio)
+
+  ;; Don't ask where to start R
+  (setq ess-ask-for-ess-directory nil)
+
+  ;; Don't restore .RData
+  (setq inferior-R-args "--no-save")
+
+  ;; Normal comment indentation
+  (setq ess-indent-with-fancy-comments nil)
+
+  ;; Don't block Emacs during evaluation
+  (setq ess-eval-visibly 'nowait)
+
+  (defun my/rstudio-layout ()
+    "Build an RStudio-like layout."
+    (interactive)
+
+    (let ((source (current-buffer)))
+
+      ;; Start R
+      (ess-switch-to-ESS t)
+
+      ;; Open the environment
+      (ess-rdired)
+
+      ;; Get the actual ESS buffers
+      (let ((console (ess-get-current-process-buffer))
+            (environment (get-buffer ess-rdired-buffer)))
+
+        ;; Go back to our R source file
+        (pop-to-buffer source)
+        (delete-other-windows)
+
+        ;; Console -> right of source
+        (display-buffer-in-atom-window
+         console
+         `((window . ,(get-buffer-window source))
+           (side . right)
+           (window-width . 0.33)
+           (dedicated . t)))
+
+        ;; Environment -> below console
+        (display-buffer-in-atom-window
+         environment
+         `((window . ,(get-buffer-window console))
+           (side . below)
+           (window-height . 0.35)
+           (dedicated . t))))
+
+
+
+      ;; (display-buffer-in-atom-window
+      ;;  plots
+      ;;  `((window . ,(get-buffer-window source))
+      ;;   (side . below) (window-height . 0.35)
+      ;;   (dedicated . t))))
+      ))
+  (add-hook 'ess-r-mode-hook #'my/rstudio-layout)
+  )

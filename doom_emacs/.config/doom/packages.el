@@ -17,7 +17,7 @@
   :recipe (:host github
            :repo "LuciusChen/redis.el"))
 (package! tmux-pane)
-(package! restclient)
+(package! verb)
 (package! websocket)
 (package! simple-httpd)
 (package! f)
