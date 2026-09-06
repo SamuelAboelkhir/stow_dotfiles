@@ -266,6 +266,7 @@ return {
             'typescriptreact',
             'vue',
             'svelte',
+            'templ',
           },
           init_options = {
             userLanguages = {

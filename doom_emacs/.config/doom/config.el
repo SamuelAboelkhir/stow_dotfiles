@@ -8,10 +8,15 @@
 (after! centaur-tabs
   (evil-global-set-key 'normal "H" #'centaur-tabs-backward-tab)
   (evil-global-set-key 'normal "L" #'centaur-tabs-forward-tab)
+  (evil-global-set-key 'normal "to" #'centaur-tabs-toggle-groups)
   )
 
 (setq org-directory "~/org/")
 (setq org-roam-directory "~/org")
+
+(use-package org
+:mode ("\\.org\\'" . org-mode)
+:config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 (use-package! websocket
     :after org-roam)
@@ -46,15 +51,13 @@
                  . (:enableMoveToFileCodeAction t
                     :autoUseWorkspaceTsdk t
                     :experimental
-                    (:maxInlayHintLength 30
-                     :completion
+                    (:completion
                      (:enableServerSideFuzzyMatch t))))
                 (:typescript
                  . (:updateImportsOnFileMove
                     (:enabled "always")
                     :suggest
                     (:completeFunctionCalls t)
-                    :inlayHints
                     (:enumMemberValues (:enabled t)
                      :functionLikeReturnTypes (:enabled t)
                      :parameterNames (:enabled "literals")

@@ -63,6 +63,7 @@
 (after! centaur-tabs
   (evil-global-set-key 'normal "H" #'centaur-tabs-backward-tab)
   (evil-global-set-key 'normal "L" #'centaur-tabs-forward-tab)
+  (evil-global-set-key 'normal "to" #'centaur-tabs-toggle-groups)
   )
 #+end_src
 
@@ -72,6 +73,13 @@
 #+begin_src emacs-lisp
 (setq org-directory "~/org/")
 (setq org-roam-directory "~/org")
+#+end_src
+
+** Adding verb to org
+#+begin_src emacs-lisp
+(use-package org
+:mode ("\\.org\\'" . org-mode)
+:config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 #+end_src
 
 ** Org roam ui
@@ -115,15 +123,13 @@
                  . (:enableMoveToFileCodeAction t
                     :autoUseWorkspaceTsdk t
                     :experimental
-                    (:maxInlayHintLength 30
-                     :completion
+                    (:completion
                      (:enableServerSideFuzzyMatch t))))
                 (:typescript
                  . (:updateImportsOnFileMove
                     (:enabled "always")
                     :suggest
                     (:completeFunctionCalls t)
-                    :inlayHints
                     (:enumMemberValues (:enabled t)
                      :functionLikeReturnTypes (:enabled t)
                      :parameterNames (:enabled "literals")
