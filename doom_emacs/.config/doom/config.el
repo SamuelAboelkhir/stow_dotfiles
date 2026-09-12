@@ -33,7 +33,22 @@
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 
-(setq doom-font (font-spec :family "Liberation Mono" :size 10))
+(setq doom-font
+      (font-spec :family "Liberation Mono" :size 10)
+      doom-variable-pitch-font
+      (font-spec :family "Liberation Sans" :size 11))
+
+(after! org
+  (set-face-attribute 'org-level-1 nil :height 1.5)
+  (set-face-attribute 'org-level-2 nil :height 1.3)
+  (set-face-attribute 'org-level-3 nil :height 1.15)
+  (set-face-attribute 'org-level-4 nil :height 1.05))
+
+(after! markdown-mode
+  (set-face-attribute 'markdown-header-face-1 nil :height 1.5)
+  (set-face-attribute 'markdown-header-face-2 nil :height 1.3)
+  (set-face-attribute 'markdown-header-face-3 nil :height 1.15)
+  (set-face-attribute 'markdown-header-face-4 nil :height 1.05))
 
 (after! eglot
   (add-to-list
@@ -200,5 +215,5 @@
       ;;   (side . below) (window-height . 0.35)
       ;;   (dedicated . t))))
       ))
-  (add-hook 'ess-r-mode-hook #'my/rstudio-layout)
+  ;; (add-hook 'ess-r-mode-hook #'my/rstudio-layout)
   )

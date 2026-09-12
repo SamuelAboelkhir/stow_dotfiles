@@ -155,3 +155,6 @@ if [ -f '/home/blackdovah/Work and Education/bootdev/CICD/google-cloud-cli-linux
 # SDKMAN (with existence check)
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# begin mage tab completion
+[ -f '/home/blackdovah/.config/mage/completion.zsh' ] && source '/home/blackdovah/.config/mage/completion.zsh'
+# end mage tab completion
