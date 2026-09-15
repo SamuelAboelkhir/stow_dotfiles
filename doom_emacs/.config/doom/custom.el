@@ -6,6 +6,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("f4d1b183465f2d29b7a2e9dbe87ccc20598e79738e5d29fc52ec8fb8c576fcfd" default))
+ '(elfeed-feeds '("https://joshblais.com/index.xml"))
  '(package-selected-packages '(go-mode org-roam posframe)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

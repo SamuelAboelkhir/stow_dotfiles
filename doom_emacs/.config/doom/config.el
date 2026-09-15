@@ -50,38 +50,42 @@
   (set-face-attribute 'markdown-header-face-3 nil :height 1.15)
   (set-face-attribute 'markdown-header-face-4 nil :height 1.05))
 
-(after! eglot
-  (add-to-list
-   'eglot-server-programs
-   `(((js-mode :language-id "javascript")
-      (js-ts-mode :language-id "javascript")
-      (tsx-ts-mode :language-id "typescriptreact")
-      (typescript-ts-mode :language-id "typescript")
-      (typescript-mode :language-id "typescript"))
-     . (,(expand-file-name "~/.local/share/nvim/mason/bin/vtsls")
-        "--stdio"))))
+;; (after! eglot
+;;   (add-to-list
+;;    'eglot-server-programs
+;;    `(((js-mode :language-id "javascript")
+;;       (js-ts-mode :language-id "javascript")
+;;       (tsx-ts-mode :language-id "typescriptreact")
+;;       (typescript-ts-mode :language-id "typescript")
+;;       (typescript-mode :language-id "typescript"))
+;;      . (,(expand-file-name "~/.local/share/nvim/mason/bin/vtsls")
+;;         "--stdio"))))
 
-(setq-default eglot-workspace-configuration
-              '((:vtsls
-                 . (:enableMoveToFileCodeAction t
-                    :autoUseWorkspaceTsdk t
-                    :experimental
-                    (:completion
-                     (:enableServerSideFuzzyMatch t))))
-                (:typescript
-                 . (:updateImportsOnFileMove
-                    (:enabled "always")
-                    :suggest
-                    (:completeFunctionCalls t)
-                    (:enumMemberValues (:enabled t)
-                     :functionLikeReturnTypes (:enabled t)
-                     :parameterNames (:enabled "literals")
-                     :parameterTypes (:enabled t)
-                     :propertyDeclarationTypes (:enabled t)
-                     :variableTypes (:enabled nil))))
-                (:javascript
-                 . (:suggest
-                    (:completeFunctionCalls t)))))
+;; (setq-default
+;;  eglot-workspace-configuration
+;;  '(:vtsls
+;;    (:enableMoveToFileCodeAction t
+;;     :autoUseWorkspaceTsdk t
+;;     :experimental
+;;     (:completion
+;;      (:enableServerSideFuzzyMatch t)))
+
+;;    :typescript
+;;    (:updateImportsOnFileMove
+;;     (:enabled "always")
+;;     :suggest
+;;     (:completeFunctionCalls t)
+;;     :inlayHints
+;;     (:enumMemberValues (:enabled t)
+;;      :functionLikeReturnTypes (:enabled t)
+;;      :parameterNames (:enabled "literals")
+;;      :parameterTypes (:enabled t)
+;;      :propertyDeclarationTypes (:enabled t)
+;;      :variableTypes (:enabled t)))
+
+;;    :javascript
+;;    (:suggest
+;;     (:completeFunctionCalls t))))
 
 (let ((auth-sock
        (string-trim
@@ -217,3 +221,9 @@
       ))
   ;; (add-hook 'ess-r-mode-hook #'my/rstudio-layout)
   )
+
+(require 'ob-lob)
+
+(org-babel-lob-ingest "~/stow_dotfiles/doom_emacs/.config/doom/functions.org")
+(load! "lisp/custom-functions")
+(keymap-global-set "C-x w w" 'my-babel-functions)
