@@ -277,6 +277,9 @@ return {
             },
           },
         },
+        vim.lsp.config('tailwindcss', {
+          workspace_required = false,
+        }),
         -- Remove ts_ls from your servers table and add this plugin:
         -- Plugin configuration
 

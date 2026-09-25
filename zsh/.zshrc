@@ -141,6 +141,8 @@ export PATH="$PATH:/home/blackdovah/.local/bin"
 export PATH="$PATH:/home/blackdovah/.turso/env"
 # opencode
 export PATH=/home/blackdovah/.opencode/bin:$PATH
+# Tailwindcss
+export PATH="/home/blackdovah/Documents/bin:$PATH"
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"

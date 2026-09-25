@@ -2,6 +2,7 @@
 (setq auth-sources '("~/.authinfo.gpg"))
 
 (load! "omarchy-themes")
+(setq doom-theme 'doom-old-hope)
 
 (setq display-line-numbers-type 'relative)
 
@@ -50,42 +51,80 @@
   (set-face-attribute 'markdown-header-face-3 nil :height 1.15)
   (set-face-attribute 'markdown-header-face-4 nil :height 1.05))
 
-;; (after! eglot
-;;   (add-to-list
-;;    'eglot-server-programs
-;;    `(((js-mode :language-id "javascript")
-;;       (js-ts-mode :language-id "javascript")
-;;       (tsx-ts-mode :language-id "typescriptreact")
-;;       (typescript-ts-mode :language-id "typescript")
-;;       (typescript-mode :language-id "typescript"))
-;;      . (,(expand-file-name "~/.local/share/nvim/mason/bin/vtsls")
-;;         "--stdio"))))
+(after! evil
+  (setq evil-escape-key-sequence "jk")
+  (setq evil-escape-delay 0.2))
 
-;; (setq-default
-;;  eglot-workspace-configuration
-;;  '(:vtsls
-;;    (:enableMoveToFileCodeAction t
-;;     :autoUseWorkspaceTsdk t
-;;     :experimental
-;;     (:completion
-;;      (:enableServerSideFuzzyMatch t)))
+(require 'eglotx-eglot)
 
-;;    :typescript
-;;    (:updateImportsOnFileMove
-;;     (:enabled "always")
-;;     :suggest
-;;     (:completeFunctionCalls t)
-;;     :inlayHints
-;;     (:enumMemberValues (:enabled t)
-;;      :functionLikeReturnTypes (:enabled t)
-;;      :parameterNames (:enabled "literals")
-;;      :parameterTypes (:enabled t)
-;;      :propertyDeclarationTypes (:enabled t)
-;;      :variableTypes (:enabled t)))
+(after! eglot
 
-;;    :javascript
-;;    (:suggest
-;;     (:completeFunctionCalls t))))
+  ;; TSX / JSX: VTSLS + Tailwind
+  (add-to-list
+   'eglot-server-programs
+   `(((tsx-ts-mode :language-id "typescriptreact")
+      (js-mode :language-id "javascriptreact")
+      (js-ts-mode :language-id "javascriptreact"))
+     . ,(eglotx-contact
+         '(:name "vtsls"
+           :command ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
+                     "--stdio")
+           :priority 100
+           :required t)
+         '(:name "tailwindcss"
+           :command ("/home/blackdovah/.local/share/nvim/mason/bin/tailwindcss-language-server"
+                     "--stdio")
+           :priority 120
+           :required nil))))
+
+  ;; TypeScript: VTSLS only
+  (add-to-list
+   'eglot-server-programs
+   `(((typescript-ts-mode :language-id "typescript")
+      (typescript-mode :language-id "typescript"))
+     . ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
+        "--stdio")))
+
+  ;; JavaScript: VTSLS only
+  (add-to-list
+   'eglot-server-programs
+   `(((js-mode :language-id "javascript")
+      (js-ts-mode :language-id "javascript"))
+     . ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
+        "--stdio"))))
+
+(setq-default
+ eglot-workspace-configuration
+ '(:vtsls
+   (:enableMoveToFileCodeAction t
+    :autoUseWorkspaceTsdk t
+    :experimental
+    (:completion
+     (:enableServerSideFuzzyMatch t)))
+
+   :typescript
+   (:updateImportsOnFileMove
+    (:enabled "always")
+    :suggest
+    (:completeFunctionCalls t)
+    (:enumMemberValues (:enabled t)
+     :functionLikeReturnTypes (:enabled t)
+     :parameterNames (:enabled "literals")
+     :parameterTypes (:enabled t)
+     :propertyDeclarationTypes (:enabled t)
+     :variableTypes (:enabled t)))
+
+   :javascript
+   (:suggest
+    (:completeFunctionCalls t))))
+
+(after! eglotx
+  (eglotx-presets-mode 1))
+
+(after! corfu
+  (add-hook 'tsx-ts-mode-hook
+            (lambda ()
+              (setq-local corfu-quit-at-boundary nil))))
 
 (let ((auth-sock
        (string-trim
@@ -227,3 +266,32 @@
 (org-babel-lob-ingest "~/stow_dotfiles/doom_emacs/.config/doom/functions.org")
 (load! "lisp/custom-functions")
 (keymap-global-set "C-x w w" 'my-babel-functions)
+
+(gptel-make-ollama
+    "Ollama"
+  :host "localhost:11434"
+  :stream t
+  :models '(
+            qwen3:8b-40960ctx
+            qwen3:4b-16384ctx
+            qwen3:8b-16384ctx
+            qwen2.5-coder:7b-16384ctx
+            qwen2.5-coder:7b
+            qwen3:8b
+            llama3:8b
+            hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M
+            ))
+
+(gptel-make-openai
+ "OpenRouter"
+ :host "openrouter.ai"
+ :endpoint "/api/v1/chat/completions"
+ :stream t
+ :key (lambda ()
+ (auth-source-pick-first-password
+ :host "openrouter.ai"
+ :user "apikey"))
+ :models '(openrouter/free))
+
+(after! gptel-agent
+  (gptel-agent-update))

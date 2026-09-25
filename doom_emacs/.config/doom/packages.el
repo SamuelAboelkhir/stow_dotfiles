@@ -27,6 +27,10 @@
 (package! org-roam-ui)
 (package! templ-ts-mode)
 (package! empv)
+(package! eglotx)
+(package! gptel-agent
+  :recipe (:host github
+           :repo "karthink/gptel-agent"))
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:

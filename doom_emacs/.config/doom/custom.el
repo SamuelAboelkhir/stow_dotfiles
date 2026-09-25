@@ -7,7 +7,7 @@
  '(custom-safe-themes
    '("f4d1b183465f2d29b7a2e9dbe87ccc20598e79738e5d29fc52ec8fb8c576fcfd" default))
  '(elfeed-feeds '("https://joshblais.com/index.xml"))
- '(package-selected-packages '(go-mode org-roam posframe)))
+ '(package-selected-packages '(eglot go-mode org-roam posframe)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

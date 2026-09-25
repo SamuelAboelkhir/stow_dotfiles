@@ -1,0 +1,67 @@
+#+title: Functions
+#+startup: overview
+
+* Shell
+
+** OMACalc
+
+#+name: omacalc
+#+begin_src shell :results value
+omacalc
+#+end_src
+
+** Current Git Branch
+
+#+name: git-branch
+#+begin_src shell :results value
+git branch --show-current
+#+end_src
+
+** Disk Usage
+
+#+name: disk-usage
+#+begin_src shell :results value
+df -h /
+#+end_src
+
+* Python
+
+** Celsius → Fahrenheit
+
+#+name: c-to-f
+#+begin_src python :var c=0 :results value
+return (c * 9 / 5) + 32
+#+end_src
+
+#+RESULTS: c-to-f
+: None
+
+** JSON Pretty Printer
+
+#+name: json-pretty
+#+begin_src python :var input=""
+import json
+
+return json.dumps(json.loads(input), indent=2)
+#+end_src
+
+* JavaScript
+
+** Slugify
+
+#+name: slugify
+#+begin_src javascript :var input=""
+return input
+.toLowerCase()
+.replace(/[^a-z0-9]+/g, "-")
+.replace(/^-|-$/g, "");
+#+end_src
+
+* Emacs Lisp
+
+** Message
+
+#+name: hello
+#+begin_src emacs-lisp :var name="world"
+(format "Hello, %s!" name)
+#+end_src
