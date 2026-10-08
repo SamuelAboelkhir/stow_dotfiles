@@ -25,12 +25,21 @@
 (package! org-auto-tangle)
 (unpin! org-roam)
 (package! org-roam-ui)
-(package! templ-ts-mode)
+(package! templ-ts-mode
+  :recipe (:local-repo "/home/blackdovah/.config/doom/local/templ-ts-mode"))
 (package! empv)
 (package! eglotx)
 (package! gptel-agent
   :recipe (:host github
            :repo "karthink/gptel-agent"))
+(package! jtsx)
+(package! macher)
+(package! eca
+  :recipe (:host github
+           :repo "editor-code-assistant/eca-emacs"
+           :files ("*.el")))
+(package! scroll-on-jump)
+(package! popterm)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:

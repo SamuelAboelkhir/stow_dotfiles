@@ -12,6 +12,28 @@
   (evil-global-set-key 'normal "to" #'centaur-tabs-toggle-groups)
   )
 
+;;; Smooth scrolling
+(use-package scroll-on-jump
+  :init
+  (setq scroll-margin 4)
+  :config
+  (setq scroll-on-jump-duration 0.5
+        scroll-on-jump-smooth t
+        scroll-on-jump-curve 'smooth)
+
+  ;; Evil jumps
+  (scroll-on-jump-advice-add evil-jump-item)
+  (scroll-on-jump-advice-add evil-jump-forward)
+  (scroll-on-jump-advice-add evil-jump-backward)
+  (scroll-on-jump-advice-add evil-goto-mark)
+  (scroll-on-jump-advice-add evil-goto-first-line)
+  (scroll-on-jump-advice-add evil-goto-line)
+  (scroll-on-jump-with-scroll-advice-add scroll-up-command)
+  (scroll-on-jump-with-scroll-advice-add scroll-down-command)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-up)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-down)
+  )
+
 (setq org-directory "~/org/")
 (setq org-roam-directory "~/org")
 
@@ -35,9 +57,9 @@
           org-roam-ui-open-on-start t))
 
 (setq doom-font
-      (font-spec :family "Liberation Mono" :size 10)
+      (font-spec :family "JetBrainsMono Nerd Font" :size 10)
       doom-variable-pitch-font
-      (font-spec :family "Liberation Sans" :size 11))
+      (font-spec :family "JetBrainsMono Nerd Font" :size 11))
 
 (after! org
   (set-face-attribute 'org-level-1 nil :height 1.5)
@@ -53,7 +75,10 @@
 
 (after! evil
   (setq evil-escape-key-sequence "jk")
-  (setq evil-escape-delay 0.2))
+  (setq evil-escape-delay 0.2)
+  (define-key minibuffer-local-map
+              (kbd "C-c SPC")
+              doom-leader-map))
 
 (require 'eglotx-eglot)
 
@@ -62,9 +87,8 @@
   ;; TSX / JSX: VTSLS + Tailwind
   (add-to-list
    'eglot-server-programs
-   `(((tsx-ts-mode :language-id "typescriptreact")
-      (js-mode :language-id "javascriptreact")
-      (js-ts-mode :language-id "javascriptreact"))
+   `(((jtsx-tsx-mode :language-id "typescriptreact")
+      (jtsx-jsx-mode :language-id "javascriptreact"))
      . ,(eglotx-contact
          '(:name "vtsls"
            :command ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
@@ -80,7 +104,7 @@
   ;; TypeScript: VTSLS only
   (add-to-list
    'eglot-server-programs
-   `(((typescript-ts-mode :language-id "typescript")
+   `(((jtsx-typescript-mode :language-id "typescript")
       (typescript-mode :language-id "typescript"))
      . ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
         "--stdio")))
@@ -91,7 +115,11 @@
    `(((js-mode :language-id "javascript")
       (js-ts-mode :language-id "javascript"))
      . ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
-        "--stdio"))))
+        "--stdio")))
+
+   (add-to-list 'eglot-server-programs
+               '((java-mode java-ts-mode)
+                 . ("~/.local/share/nvim/mason/bin/jdtls"))))
 
 (setq-default
  eglot-workspace-configuration
@@ -107,7 +135,8 @@
     (:enabled "always")
     :suggest
     (:completeFunctionCalls t)
-    (:enumMemberValues (:enabled t)
+    :enumMemberValues
+    (:enabled t
      :functionLikeReturnTypes (:enabled t)
      :parameterNames (:enabled "literals")
      :parameterTypes (:enabled t)
@@ -116,7 +145,19 @@
 
    :javascript
    (:suggest
-    (:completeFunctionCalls t))))
+    (:completeFunctionCalls t))
+
+   :gopls
+   (:staticcheck t
+    :analyses
+    (:ST1000 t
+     :ST1020 t
+     :ST1021 t
+     :ST1022 t
+     :nilness t
+     :unusedparams t
+     :unusedwrite t
+     :useany t))))
 
 (after! eglotx
   (eglotx-presets-mode 1))
@@ -290,8 +331,30 @@
  :key (lambda ()
  (auth-source-pick-first-password
  :host "openrouter.ai"
- :user "apikey"))
+ :user "apikeyOpenRouter"))
  :models '(openrouter/free))
+
+(gptel-make-gemini
+    "gemini"
+  :stream t
+  :key (lambda ()
+         (auth-source-pick-first-password
+          :host "gemini"
+          :user "apikeyGemini"
+          :models "gemini-2.5-flash")))
 
 (after! gptel-agent
   (gptel-agent-update))
+
+(use-package! macher
+  :config
+  (macher-install)
+  (macher-enable))
+
+(setq diary-file "~/org/agenda.org")
+(add-hook 'org-finalize-agenda-hook #'org-agenda-to-appt)
+(run-at-time 0 1800 'org-agenda-to-appt)
+
+(after! popterm
+  :config
+  (setq popterm-backend 'ghostel))

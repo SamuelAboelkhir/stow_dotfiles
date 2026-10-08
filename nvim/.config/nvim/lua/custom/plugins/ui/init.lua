@@ -8,5 +8,6 @@ return {
   require(submodulePath .. 'colorizer'),
   require(submodulePath .. 'notify'),
   require(submodulePath .. 'greeter'),
+  require(submodulePath .. 'org'),
   -- require(submodulePath .. 'obsidian'),
 }
