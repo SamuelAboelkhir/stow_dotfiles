@@ -2,7 +2,6 @@
 (setq auth-sources '("~/.authinfo.gpg"))
 
 (load! "omarchy-themes")
-(setq doom-theme 'doom-old-hope)
 
 (setq display-line-numbers-type 'relative)
 
@@ -91,7 +90,7 @@
       (jtsx-jsx-mode :language-id "javascriptreact"))
      . ,(eglotx-contact
          '(:name "vtsls"
-           :command ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
+           :command ("/home/blackdovah/.local/share/nvim/mason/bin/typescript-language-server"
                      "--stdio")
            :priority 100
            :required t)
@@ -106,7 +105,7 @@
    'eglot-server-programs
    `(((jtsx-typescript-mode :language-id "typescript")
       (typescript-mode :language-id "typescript"))
-     . ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
+     . ("/home/blackdovah/.local/share/nvim/mason/bin/typescript-language-server"
         "--stdio")))
 
   ;; JavaScript: VTSLS only
@@ -114,7 +113,7 @@
    'eglot-server-programs
    `(((js-mode :language-id "javascript")
       (js-ts-mode :language-id "javascript"))
-     . ("/home/blackdovah/.local/share/nvim/mason/bin/vtsls"
+     . ("/home/blackdovah/.local/share/nvim/mason/bin/typescript-language-server"
         "--stdio")))
 
    (add-to-list 'eglot-server-programs
@@ -313,14 +312,13 @@
   :host "localhost:11434"
   :stream t
   :models '(
+            qwen3.5:9b-16384ctx
             qwen3:8b-40960ctx
             qwen3:4b-16384ctx
             qwen3:8b-16384ctx
             qwen2.5-coder:7b-16384ctx
             qwen2.5-coder:7b
             qwen3:8b
-            llama3:8b
-            hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M
             ))
 
 (gptel-make-openai
@@ -352,9 +350,35 @@
   (macher-enable))
 
 (setq diary-file "~/org/agenda.org")
-(add-hook 'org-finalize-agenda-hook #'org-agenda-to-appt)
-(run-at-time 0 1800 'org-agenda-to-appt)
+;; (add-hook 'org-finalize-agenda-hook #'org-agenda-to-appt)
+;; (run-at-time 0 1800 'org-agenda-to-appt)
 
 (after! popterm
   :config
   (setq popterm-backend 'ghostel))
+
+(use-package! obsidian
+  :config
+  (setq obsidian-directory
+        (expand-file-name "~/Documents/Obsidian_vaults/")
+        obsidian-inbox-directory "Inbox"
+        markdown-enable-wiki-links t)
+
+  (global-obsidian-mode t)
+  (obsidian-backlinks-mode t)
+
+  :bind (:map obsidian-mode-map
+         ("C-c C-o" . obsidian-follow-link-at-point)
+         ("C-c C-p" . obsidian-jump)
+         ("C-c C-l" . obsidian-insert-link)
+         ("C-c C-b" . obsidian-backlink-jump)))
+
+(after! org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((gnuplot . t))))
+
+(use-package ess-plot
+  :hook (ess-r-post-run . ess-plot-on-startup-h))
+
+(setq evil-want-fine-undo t)

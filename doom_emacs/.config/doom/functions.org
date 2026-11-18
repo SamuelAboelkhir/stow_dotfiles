@@ -3,11 +3,11 @@
 
 * Shell
 
-** OMACalc
+** gnome-calculator
 
-#+name: omacalc
+#+name: gnome-calculator
 #+begin_src shell :results value
-omacalc
+gnome-calculator
 #+end_src
 
 ** Current Git Branch

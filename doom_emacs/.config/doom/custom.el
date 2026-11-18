@@ -4,9 +4,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(column-number-mode t)
  '(custom-safe-themes
    '("f4d1b183465f2d29b7a2e9dbe87ccc20598e79738e5d29fc52ec8fb8c576fcfd" default))
+ '(display-line-numbers-type 'relative)
  '(elfeed-feeds '("https://joshblais.com/index.xml"))
+ '(fringe-mode 0 nil (fringe))
+ '(menu-bar-mode nil)
  '(org-agenda-files
    '("/home/blackdovah/org/agenda.org"
      "/home/blackdovah/org/20260919170819-org_playground.org"
@@ -19,7 +24,9 @@
      "/home/blackdovah/org/todo.org" "/home/blackdovah/org/va-db.org"
      "/home/blackdovah/org/va-performance-testing.org"
      "/home/blackdovah/org/va-rest.org" "/home/blackdovah/org/verb-example.org"))
- '(package-selected-packages '(eglot go-mode org-roam posframe)))
+ '(package-selected-packages '(doom-game eglot go-mode org-roam posframe))
+ '(size-indication-mode t)
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
